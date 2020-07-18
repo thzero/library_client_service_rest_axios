@@ -1,9 +1,9 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.6.13",
+  "version": "0.6.14",
   "version_major": 0,
   "version_minor": 6,
-  "version_patch": 13,
+  "version_patch": 14,
   "version_date": "07/18/2020",
   "author": "thZero",
   "license": "MIT",
@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/thzero/library_client_service_rest_axios#readme",
   "engines": {
-    "node": ">=13.0.1"
+    "node": ">=12.18"
   },
   "scripts": {
     "cli-update": "node -r esm ./cli.js --updateversion --pi",
