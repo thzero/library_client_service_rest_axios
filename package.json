@@ -1,0 +1,32 @@
+{
+  "name": "@thzero/library_client_service_rest_axios",
+  "version": "0.6.11",
+  "version_major": 0,
+  "version_minor": 6,
+  "version_patch": 11,
+  "version_date": "07/17/2020",
+  "author": "thZero",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thzero/library_client_service_rest_axios.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thzero/library_client_service_rest_axios/issues"
+  },
+  "homepage": "https://github.com/thzero/library_client_service_rest_axios#readme",
+  "engines": {
+    "node": ">=13.0.1"
+  },
+  "scripts": {
+    "cli-update": "node -r esm ./cli.js --updateversion --pi",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@thzero/library": "npm:@thzero/library_client@^0.6.11",
+    "axios": "^0.19.2"
+  },
+  "peerDependencies": {
+    "esm": "^3.2.25"
+  }
+}
