@@ -1,9 +1,9 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.6.14",
+  "version": "0.6.16",
   "version_major": 0,
   "version_minor": 6,
-  "version_patch": 14,
+  "version_patch": 16,
   "version_date": "07/18/2020",
   "author": "thZero",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "node": ">=12.18"
   },
   "scripts": {
-    "cli-update": "node -r esm ./cli.js --updateversion --pi",
+    "cli-update": "./node_modules/.bin/library-cli --updateversion --pi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -28,5 +28,8 @@
   },
   "peerDependencies": {
     "esm": "^3.2.25"
+  },
+  "devDependencies": {
+    "@thzero/library_cli": "^0.6.16"
   }
 }
