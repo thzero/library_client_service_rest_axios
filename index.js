@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import LibraryConstants from '@thzero/library/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import RestCommunicationService from '@thzero/library/service/restCommunication';
 
