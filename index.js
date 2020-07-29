@@ -2,11 +2,11 @@ import axios from 'axios'
 
 // import crc32 from 'crc/crc32'
 
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
 import Utility from '@thzero/library_common/utility';
 
-import RestCommunicationService from '@thzero/library/service/restCommunication';
+import RestCommunicationService from '@thzero/library_client/service/restCommunication';
 
 const separator = ': ';
 const contentType = 'Content-Type';
