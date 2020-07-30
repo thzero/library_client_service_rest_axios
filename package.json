@@ -23,7 +23,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@thzero/library_client": "^0.7.15",
+    "@thzero/library_client": "^0.7.16",
     "@thzero/library_common": "^0.7.14",
     "axios": "^0.19.2"
   },
