@@ -19,6 +19,12 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		this._serviceAuth = null;
 	}
 
+	async init(injector) {
+		await super.init(injector);
+
+		this._serviceAuth = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_AUTH);
+	}
+
 	async delete(key, url, options) {
 		const executor = await this._create(key, options);
 		return this._validate(await executor.delete(Utility.formatUrl(url)));
@@ -37,12 +43,6 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 	async getById(key, url, id, options) {
 		const executor = await this._create(key, options);
 		return this._validate(await executor.get(Utility.formatUrlParams(url, id)));
-	}
-
-	async init(injector) {
-		await super.init(injector);
-
-		this._serviceAuth = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_AUTH);
 	}
 
 	async post(key, url, body, options) {
