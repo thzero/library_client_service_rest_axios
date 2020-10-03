@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import RestCommunicationService from '@thzero/library_client/service/restCommunication';
 
@@ -25,37 +25,37 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		this._serviceAuth = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_AUTH);
 	}
 
-	async delete(key, url, options) {
-		const executor = await this._create(key, options);
-		return this._validate(await executor.delete(Utility.formatUrl(url)));
+	async delete(correlationId, key, url, options) {
+		const executor = await this._create(correlationId, key, options);
+		return this._validate(correlationId, await executor.delete(LibraryUtility.formatUrl(url)));
 	}
 
-	async deleteById(key, url, id, options) {
-		const executor = await this._create(key, options);
-		return this._validate(await executor.delete(Utility.formatUrlParams(url, id)));
+	async deleteById(correlationId, key, url, id, options) {
+		const executor = await this._create(correlationId, key, options);
+		return this._validate(correlationId, await executor.delete(LibraryUtility.formatUrlParams(url, id)));
 	}
 
-	async get(key, url, options) {
-		const executor = await this._create(key, options);
-		return this._validate(await executor.get(Utility.formatUrl(url)));
+	async get(correlationId, key, url, options) {
+		const executor = await this._create(correlationId, key, options);
+		return this._validate(correlationId, await executor.get(LibraryUtility.formatUrl(url)));
 	}
 
-	async getById(key, url, id, options) {
-		const executor = await this._create(key, options);
-		return this._validate(await executor.get(Utility.formatUrlParams(url, id)));
+	async getById(correlationId, key, url, id, options) {
+		const executor = await this._create(correlationId, key, options);
+		return this._validate(correlationId, await executor.get(LibraryUtility.formatUrlParams(url, id)));
 	}
 
-	async post(key, url, body, options) {
-		const executor = await this._create(key, options);
-		return this._validate(await executor.post(Utility.formatUrl(url), body));
+	async post(correlationId, key, url, body, options) {
+		const executor = await this._create(correlationId, key, options);
+		return this._validate(correlationId, await executor.post(LibraryUtility.formatUrl(url), body));
 	}
 
-	async postById(key, url, id, body, options) {
-		const executor = await this._create(key, options);
-		return this._validate(await executor.post(Utility.formatUrlParams(url, id), body));
+	async postById(correlationId, key, url, id, body, options) {
+		const executor = await this._create(correlationId, key, options);
+		return this._validate(correlationId, await executor.post(LibraryUtility.formatUrlParams(url, id), body));
 	}
 
-	async _create(key, opts) {
+	async _create(correlationId, key, opts) {
 		const config = this._config.getBackend(key);
 		let baseUrl = config.baseUrl;
 		if (!baseUrl.endsWith('/'))
@@ -64,7 +64,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		const token = await this._addTokenHeader();
 		const headers = {};
 		headers[LibraryConstants.Headers.AuthKeys.API] = config.apiKey;
-		headers[LibraryConstants.Headers.CorrelationId] = Utility.generateId();
+		headers[LibraryConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryUtility.generateId();
 		if (token)
 			headers[LibraryConstants.Headers.AuthKeys.AUTH] = LibraryConstants.Headers.AuthKeys.AUTH_BEARER + separator + token;
 		headers[contentType] = contentTypeJson;
@@ -117,7 +117,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		return instance;
 	}
 
-	_validate(response) {
+	_validate(correlationId, response) {
 		if (response.status === 200) {
 			// TODO: CRC
 			// if (response.data.results && response.data.results.data) {
@@ -131,7 +131,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		if (response.status === 401)
 			this._serviceAuth.tokenUser(null, true);
 
-		return this._error('AxiosRestCommunicationService', '_validate');
+		return this._error('AxiosRestCommunicationService', '_validate', null, null, null, null, correlationId);
 	}
 }
 
