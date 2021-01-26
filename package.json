@@ -20,7 +20,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@thzero/library_common": "^0.13.4",
     "axios": "^0.21.1"
   },
   "devDependencies": {
