@@ -34,28 +34,28 @@ jobs:
         node-version: ${{ matrix.node-version }}
         registry-url: 'https://registry.npmjs.org'
     - name: NCU Upgrade Check
-      if: github.event.action == 'npm'
+      if: github.event.client_payload.action == 'npm'
       id: ncu-upgrade
       uses: thzero/ncu-upgrade@v0.13-beta
     - name: NCU Updated Check Output
-      if: github.event.action == 'npm'
+      if: github.event.client_payload.action == 'npm'
       run: |
         echo upgraded: ${{ steps.ncu-upgrade.outputs.upgraded }}
-        echo npm_and_upgrade? ${{ (github.event.action == 'npm' && steps.ncu-upgrade.outputs.upgraded) }}
+        echo npm_and_upgrade? ${{ (github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded) }}
     - name: Output
       run: |
         echo upgraded: ${{ steps.ncu-upgrade.outputs.upgraded }}
         echo action: ${{ github.event.action }}
-        echo action_is_npm? ${{ (github.event.action == 'npm') }}
-        echo npm_and_upgrade? ${{ (github.event.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) }}
+        echo action_is_npm? ${{ (github.event.client_payload.action == 'npm') }}
+        echo npm_and_upgrade? ${{ (github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) }}
         echo action_is_version? ${{ (github.event.action == 'version') }}
-        echo upgrade? ${{ ((github.event.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version') }}
+        echo upgrade? ${{ ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version') }}
     - name: Node Dependencies
-      if: ((github.event.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
+      if: ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
       run: |
         npm install --no-package-lock
     - name: Update Package Version
-      if: ((github.event.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
+      if: ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
       run: |
         npm run cli-update -- --silent
     - name: Git Check
@@ -65,10 +65,10 @@ jobs:
     - name: Git Check Output
       run: |
         echo changed? ${{ steps.git-changes.outputs.changed }}
-        echo npm commit? ${{ github.event.action == 'npm' && steps.git-changes.outputs.changed == 1 }}
+        echo npm commit? ${{ github.event.client_payload.action == 'npm' && steps.git-changes.outputs.changed == 1 }}
         echo !npm commit? ${{ github.event.action != 'npm' && steps.git-changes.outputs.changed == 1 && github.event.client_payload.label != '' }}
     - name: Git Commit NPM
-      if: github.event.action == 'npm' && steps.git-changes.outputs.changed == 1
+      if: github.event.client_payload.action == 'npm' && steps.git-changes.outputs.changed == 1
       run: |
         git config --global user.name '${{ github.repository_owner }}'
         git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
