@@ -1,10 +1,10 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.13.4",
+  "version": "0.14.0",
   "version_major": 0,
-  "version_minor": 13,
-  "version_patch": 4,
-  "version_date": "01/28/2021",
+  "version_minor": 14,
+  "version_patch": 0,
+  "version_date": "08/31/2021",
   "author": "thZero",
   "license": "MIT",
   "repository": {
