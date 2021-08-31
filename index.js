@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 // import crc32 from 'crc/crc32'
 
@@ -64,6 +64,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		const token = await this._addTokenHeader();
 		const headers = {};
 		headers[LibraryConstants.Headers.AuthKeys.API] = config.apiKey;
+		// eslint-disable-next-line
 		headers[LibraryConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryUtility.generateId();
 		if (token)
 			headers[LibraryConstants.Headers.AuthKeys.AUTH] = LibraryConstants.Headers.AuthKeys.AUTH_BEARER + separator + token;
@@ -73,7 +74,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 			baseURL: baseUrl,
 			headers: headers,
 			validateStatus: function (status) {
-				return status >= 200 && status <= 503
+				return status >= 200 && status <= 503;
 			}
 		};
 
@@ -101,17 +102,17 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		// Add a response interceptor
 		instance.interceptors.response.use(function (response) {
 			// Any status code that lie within the range of 2xx cause this function to trigger
-			return response
+			return response;
 		},
 		function (error) {
 			// Any status codes that falls outside the range of 2xx cause this function to trigger// Any status codes that falls outside the range of 2xx cause this function to trigger
 			// await retry(3, unreliablePromise(3, log('Error'))).then(log('Resolved'))
 
 			if (error && error.response && error.response.status === 401) {
-				return this._serviceAuth.tokenUser(null, true).resolve()
+				return this._serviceAuth.tokenUser(null, true).resolve();
 			}
 
-			return Promise.reject(error)
+			return Promise.reject(error);
 		});
 
 		return instance;
