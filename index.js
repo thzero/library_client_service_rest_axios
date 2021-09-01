@@ -100,22 +100,31 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		//		: Promise.reject(err))
 
 		// Add a response interceptor
-		instance.interceptors.response.use(function (response) {
-			// Any status code that lie within the range of 2xx cause this function to trigger
-			return response;
-		},
-		function (error) {
-			// Any status codes that falls outside the range of 2xx cause this function to trigger// Any status codes that falls outside the range of 2xx cause this function to trigger
-			// await retry(3, unreliablePromise(3, log('Error'))).then(log('Resolved'))
-
-			if (error && error.response && error.response.status === 401) {
-				return this._serviceAuth.tokenUser(null, true).resolve();
-			}
-
-			return Promise.reject(error);
-		});
+		instance.interceptors.response.use(
+			this._interceptorSuccess,
+			this._interceptorFailure
+		);
 
 		return instance;
+	}
+
+	_interceptorFailure(error) {
+		// Any status codes that falls outside the range of 2xx cause this function to trigger// Any status codes that falls outside the range of 2xx cause this function to trigger
+		// await retry(3, unreliablePromise(3, log('Error'))).then(log('Resolved'))
+
+		if (error && error.response && error.response.status === 401)
+			return this._refreshToken(correlationId, true).resolve();
+
+		return Promise.reject(error);
+	}
+
+	_interceptorSuccess(response) {
+		// Any status code that lie within the range of 2xx cause this function to trigger
+		return response;
+	}
+
+	_requestNewToken() {
+		return this._serviceAuth.tokenUser(null, true);
 	}
 
 	_validate(correlationId, response) {
@@ -130,7 +139,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		}
 
 		if (response.status === 401)
-			this._serviceAuth.tokenUser(null, true);
+			this._refreshToken(correlationId, true);
 
 		return this._error('AxiosRestCommunicationService', '_validate', null, null, null, null, correlationId);
 	}
