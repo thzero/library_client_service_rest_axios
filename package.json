@@ -1,10 +1,10 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.14.5",
+  "version": "0.14.6",
   "version_major": 0,
   "version_minor": 14,
-  "version_patch": 5,
-  "version_date": "09/01/2021",
+  "version_patch": 6,
+  "version_date": "09/18/2021",
   "author": "thZero",
   "license": "MIT",
   "repository": {
@@ -21,11 +21,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "@thzero/library_client": "^0.14",
     "@thzero/library_common": "^0.13"
   },
   "devDependencies": {
-    "@thzero/library_cli": "^0.13.17"
+    "@thzero/library_cli": "^0.13.18"
   }
 }
