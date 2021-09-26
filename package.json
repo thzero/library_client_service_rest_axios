@@ -1,10 +1,10 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.14.6",
+  "version": "0.14.7",
   "version_major": 0,
   "version_minor": 14,
-  "version_patch": 6,
-  "version_date": "09/18/2021",
+  "version_patch": 7,
+  "version_date": "09/26/2021",
   "author": "thZero",
   "license": "MIT",
   "repository": {
@@ -26,6 +26,6 @@
     "@thzero/library_common": "^0.13"
   },
   "devDependencies": {
-    "@thzero/library_cli": "^0.13.18"
+    "@thzero/library_cli": "^0.13.19"
   }
 }
