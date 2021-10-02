@@ -23,7 +23,7 @@
   "dependencies": {
     "axios": "^0.21.4",
     "@thzero/library_client": "^0.14",
-    "@thzero/library_common": "^0.13"
+    "@thzero/library_common": "^0.14"
   },
   "devDependencies": {
     "@thzero/library_cli": "^0.13.19"
