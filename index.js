@@ -61,6 +61,9 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		if (!baseUrl.endsWith('/'))
 			baseUrl += '/';
 
+		if (opts && opts.replacements)
+			baseUrl = baseUrl.replace(/\{([^\}]+)?}/g, ($1, $2) => { return opts.replacements[$2]; });
+
 		const token = await this._addTokenHeader();
 		const headers = {};
 		headers[LibraryConstants.Headers.AuthKeys.API] = config.apiKey;
