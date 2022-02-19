@@ -26,6 +26,6 @@
     "@thzero/library_common": "^0.15"
   },
   "devDependencies": {
-    "@thzero/library_cli": "^0.15.4"
+    "@thzero/library_cli": "^0.15"
   }
 }
