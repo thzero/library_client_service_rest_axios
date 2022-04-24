@@ -16,16 +16,14 @@
   },
   "homepage": "https://github.com/thzero/library_client_service_rest_axios#readme",
   "scripts": {
-    "cli-update": "./node_modules/.bin/library-cli --updateversion --pi",
-    "cli-update-w": ".\\node_modules\\.bin\\library-cli --updateversion --pi",
+    "cli-update": "library-cli --updateversion --pi",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^0.26.1",
+    "axios": "^0.26.1"
+  },
+  "peerDependencies": {
     "@thzero/library_client": "^0.15",
     "@thzero/library_common": "^0.15"
-  },
-  "devDependencies": {
-    "@thzero/library_cli": "^0.15"
   }
 }
