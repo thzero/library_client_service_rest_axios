@@ -48,6 +48,10 @@ jobs:
         echo npm_and_upgrade? ${{ (github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) }}
         echo action_is_version? ${{ (github.event.action == 'version') }}
         echo upgrade? ${{ ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version') }}
+    - name: Node Dependencies for CLI
+      if: ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
+      run: |
+        npm install -g @thzero/library_cli
     - name: Node Dependencies
       if: ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
       run: |
@@ -55,7 +59,8 @@ jobs:
     - name: Update Package Version
       if: ((github.event.client_payload.action == 'npm' && steps.ncu-upgrade.outputs.upgraded == true) || github.event.action == 'version')
       run: |
-        npm run cli-update -- --silent
+        # npm run cli-update -- --silent
+        library-cli --updateversion --pi --silent
     - name: Git Check
       id: git-changes
       if: success()
@@ -65,8 +70,20 @@ jobs:
         echo changed? ${{ steps.git-changes.outputs.changed }}
         echo npm commit? ${{ github.event.client_payload.action == 'npm' && steps.git-changes.outputs.changed == true }}
         echo !npm commit? ${{ github.event.action != 'npm' && steps.git-changes.outputs.changed == true && github.event.client_payload.label != '' }}
+    - name: Git Diff Check
+      id: git-diff-changes
+      run: |
+        git diff origin/master origin/dev --shortstat
+        diff_check=$(git diff origin/master origin/dev --shortstat)
+        echo $diff_check
+        echo ${#diff_check}
+        diff_check_length=${#diff_check}
+        echo ::set-output name=diff_check_length::$diff_check_length
+    - name: Git Diff Check Output
+      run: |
+        echo ${{ steps.git-diff-changes.outputs.diff_check_length }}- name: Git Commit NPM
     - name: Git Commit NPM
-      if: github.event.client_payload.action == 'npm' && steps.git-changes.outputs.changed == true
+      if: github.event.client_payload.action == 'npm' && (steps.git-changes.outputs.changed == true || steps.git-diff-changes.outputs.diff_check_length > 0)
       run: |
         git config --global user.name '${{ github.repository_owner }}'
         git config --global user.email '${{ github.repository_owner }}@users.noreply.github.com'
@@ -107,3 +124,11 @@ jobs:
       if: steps.git-changes.outputs.changed == 1 && success()
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Repository Dispatch - Build Base
+      if: github.event.action == 'build_all'
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.ACCESS_TOKEN }}
+        repository: thzero/library_build
+        event-type: 'build_all_base'
+        client-payload: '{ "action": "${{ github.event.client_payload.action }}", "label": "${{ github.event.client_payload.label }}" }'
