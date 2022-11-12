@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npm run cli-update
+library-cli --updateversion --pi
