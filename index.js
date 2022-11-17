@@ -9,6 +9,7 @@ import LibraryUtility from '@thzero/library_common/utility';
 import RestCommunicationService from '@thzero/library_client/service/restCommunication';
 
 const separator = ': ';
+const acceptType = 'accept';
 const contentType = 'Content-Type';
 const contentTypeJson = 'application/json';
 
@@ -66,12 +67,18 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 
 		const token = await this._addTokenHeader();
 		const headers = {};
-		headers[LibraryConstants.Headers.AuthKeys.API] = config.apiKey;
+		if (config.apiKey)
+			headers[LibraryConstants.Headers.AuthKeys.API] = config.apiKey;
 		// eslint-disable-next-line
-		headers[LibraryConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryUtility.generateId();
-		if (token)
+		if (!(opts && opts.ignoreCorrelationId))
+			headers[LibraryConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryUtility.generateId();
+		if (token && !(opts && opts.ignoreToken))
 			headers[LibraryConstants.Headers.AuthKeys.AUTH] = LibraryConstants.Headers.AuthKeys.AUTH_BEARER + separator + token;
-		headers[contentType] = contentTypeJson;
+		headers[acceptType] = (opts && opts.acceptType != null ? opts.acceptType : contentTypeJson);
+		headers[contentType] = (opts && opts.contentType != null ? opts.contentType : contentTypeJson);
+		if (opts && opts.headers)
+			//opts = Object.assign(headers, opts.headers);
+			opts = { ...headers, ...opts.headers }
 
 		let options = {
 			baseURL: baseUrl,
