@@ -1,9 +1,9 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.16.3",
+  "version": "0.16.4",
   "version_major": 0,
   "version_minor": 16,
-  "version_patch": 3,
+  "version_patch": 4,
   "version_date": "11/23/2022",
   "author": "thZero",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^1.2.0"
   },
   "peerDependencies": {
     "@thzero/library_client": "^0.16",
