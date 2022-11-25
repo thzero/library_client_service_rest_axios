@@ -8,8 +8,9 @@
 
 [![NPM](https://nodei.co/npm/@thzero/library_client_service_rest_axios.png?compact=true)](https://npmjs.org/package/@thzero/library_client_service_rest_axios)
 
-#### NodeJs
+### Requirements
 
-Requires 
-* [library_common](https://npmjs.org/package/@thzero/library_common)
-* [library_client](https://npmjs.org/package/@thzero/library_client)
+#### Packages
+
+* [![NPM](https://nodei.co/npm/@thzero/library_common.png?compact=true)](https://npmjs.org/package/@thzero/library_common)
+* [![NPM](https://nodei.co/npm/@thzero/library_client.png?compact=true)](https://npmjs.org/package/@thzero/library_client)
