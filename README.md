@@ -4,7 +4,7 @@
 
 # library_client_service_rest_axios
 
-### Installation
+## Installation
 
 [![NPM](https://nodei.co/npm/@thzero/library_client_service_rest_axios.png?compact=true)](https://npmjs.org/package/@thzero/library_client_service_rest_axios)
 
