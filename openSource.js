@@ -27,6 +27,6 @@ export default () => {
             url: 'https://github.com/axios/axios',
             licenseName: 'MIT',
             licenseUrl: 'https://github.com/axios/axios/blob/master/LICENSE'
-        },
+        }
     ];
 }
