@@ -78,7 +78,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		headers[contentType] = (opts && opts.contentType != null ? opts.contentType : contentTypeJson);
 		if (opts && opts.headers)
 			//opts = Object.assign(headers, opts.headers);
-			opts = { ...headers, ...opts.headers }
+			opts = { ...headers, ...opts.headers };
 
 		let options = {
 			baseURL: baseUrl,
