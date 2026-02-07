@@ -1,9 +1,9 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.18.19",
+  "version": "0.18.20",
   "version_major": 0,
   "version_minor": 18,
-  "version_patch": 19,
+  "version_patch": 20,
   "version_date": "02/07/2026",
   "author": "thZero",
   "author_url": "https://www.thzero.com",
