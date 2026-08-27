@@ -1,10 +1,10 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
-  "version": "0.18.27",
+  "version": "0.18.28",
   "version_major": 0,
   "version_minor": 18,
-  "version_patch": 27,
-  "version_date": "07/20/2026",
+  "version_patch": 28,
+  "version_date": "08/27/2026",
   "author": "thZero",
   "author_url": "https://www.thzero.com",
   "copyright": "2020-2026",
@@ -22,7 +22,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^1.18.1"
+    "axios": "^1.20.0"
   },
   "peerDependencies": {
     "@thzero/library_client": "^0.18",
