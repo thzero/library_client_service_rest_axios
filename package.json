@@ -26,6 +26,6 @@
   },
   "peerDependencies": {
     "@thzero/library_client": "^0.18",
-    "@thzero/library_common": "^0.18"
+    "@thzero/library_common": "^0.19"
   }
 }
