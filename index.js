@@ -57,7 +57,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 	}
 
 	async _create(correlationId, key, opts) {
-		const config = this._config.getBackend(key);
+		const config = this._config.getBackend(correlationId, key);
 		let baseUrl = config.baseUrl;
 		if (!baseUrl.endsWith('/'))
 			baseUrl += '/';
@@ -74,8 +74,8 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 			headers[LibraryClientConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryCommonUtility.generateId();
 		if (token && !(opts && opts.ignoreToken))
 			headers[LibraryClientConstants.Headers.AuthKeys.AUTH] = LibraryClientConstants.Headers.AuthKeys.AUTH_BEARER + separator + token;
-		headers[acceptType] = (opts && opts.acceptType != null ? opts.acceptType : contentTypeJson);
-		headers[contentType] = (opts && opts.contentType != null ? opts.contentType : contentTypeJson);
+		headers[acceptType] = (opts?.acceptType ?? contentTypeJson);
+		headers[contentType] = (opts?.contentType ?? contentTypeJson);
 		if (opts && opts.headers)
 			//opts = Object.assign(headers, opts.headers);
 			opts = { ...headers, ...opts.headers };
