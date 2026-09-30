@@ -11,3 +11,5 @@ version.sh
 .npmignore
 .github
 .npmrc
+test
+vitest.config.js
