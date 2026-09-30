@@ -110,20 +110,29 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		//		: Promise.reject(err))
 
 		// Add a response interceptor
+		// bound: axios calls these without the service as `this`
 		instance.interceptors.response.use(
-			this._interceptorSuccess,
-			this._interceptorFailure
+			this._interceptorSuccess.bind(this),
+			this._interceptorFailure.bind(this)
 		);
 
 		return instance;
 	}
 
-	_interceptorFailure(error) {
+	async _interceptorFailure(error) {
 		// Any status codes that falls outside the range of 2xx cause this function to trigger// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// await retry(3, unreliablePromise(3, log('Error'))).then(log('Resolved'))
 
-		if (error && error.response && error.response.status === 401)
-			return this._refreshToken(correlationId, true).resolve();
+		// validateStatus accepts 200-503, so a 401 normally reaches _validate, not here
+		if (error && error.response && error.response.status === 401) {
+			const correlationId = LibraryCommonUtility.correlationId();
+			try {
+				await this._refreshToken(correlationId, true);
+			}
+			catch (err) {
+				this._logger.exception('AxiosRestCommunicationService', '_interceptorFailure', err, correlationId);
+			}
+		}
 
 		return Promise.reject(error);
 	}
@@ -133,11 +142,12 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		return response;
 	}
 
-	_requestNewToken() {
-		return this._serviceAuth.tokenUser(null, true);
+	_requestNewToken(correlationId, force) {
+		// was this._serviceAuth.tokenUser, which no auth service defines
+		return this._refreshToken(correlationId, force);
 	}
 
-	_validate(correlationId, response) {
+	async _validate(correlationId, response) {
 		if (response.status === 200) {
 			// TODO: CRC
 			// if (response.data.results && response.data.results.data) {
@@ -148,8 +158,14 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 			return response.data;
 		}
 
-		if (response.status === 401)
-			this._refreshToken(correlationId, true);
+		if (response.status === 401) {
+			try {
+				await this._refreshToken(correlationId, true);
+			}
+			catch (err) {
+				this._logger.exception('AxiosRestCommunicationService', '_validate', err, correlationId);
+			}
+		}
 
 		return this._error('AxiosRestCommunicationService', '_validate', null, null, null, null, correlationId);
 	}
