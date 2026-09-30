@@ -1,5 +1,6 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
+  "type": "module",
   "version": "0.18.28",
   "version_major": 0,
   "version_minor": 18,
