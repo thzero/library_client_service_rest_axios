@@ -13,3 +13,4 @@ version.sh
 .npmrc
 test
 vitest.config.js
+eslint.config.mjs
