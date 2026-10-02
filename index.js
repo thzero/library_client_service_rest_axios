@@ -69,16 +69,16 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		const headers = {};
 		if (config.apiKey)
 			headers[LibraryClientConstants.Headers.AuthKeys.API] = config.apiKey;
-		// eslint-disable-next-line
 		if (!(opts && opts.ignoreCorrelationId))
 			headers[LibraryClientConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryCommonUtility.generateId();
 		if (token && !(opts && opts.ignoreToken))
 			headers[LibraryClientConstants.Headers.AuthKeys.AUTH] = LibraryClientConstants.Headers.AuthKeys.AUTH_BEARER + separator + token;
 		headers[acceptType] = (opts?.acceptType ?? contentTypeJson);
 		headers[contentType] = (opts?.contentType ?? contentTypeJson);
+		// a caller's headers win over the defaults; this built the merged map into opts,
+		// where it was never sent
 		if (opts && opts.headers)
-			//opts = Object.assign(headers, opts.headers);
-			opts = { ...headers, ...opts.headers };
+			Object.assign(headers, opts.headers);
 
 		let options = {
 			baseURL: baseUrl,
@@ -90,7 +90,8 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 
 		if (config.timeout)
 			options.timeout = config.timeout;
-		options = { ...options, ...opts };
+		// headers last: opts.headers alone would replace the token and correlation id
+		options = { ...options, ...opts, headers };
 
 		const instance = axios.create(options);
 
