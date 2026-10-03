@@ -57,7 +57,7 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 	}
 
 	async _create(correlationId, key, opts) {
-		const config = this._config.getBackend(key);
+		const config = this._config.getBackend(correlationId, key);
 		let baseUrl = config.baseUrl;
 		if (!baseUrl.endsWith('/'))
 			baseUrl += '/';
@@ -69,16 +69,16 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		const headers = {};
 		if (config.apiKey)
 			headers[LibraryClientConstants.Headers.AuthKeys.API] = config.apiKey;
-		// eslint-disable-next-line
 		if (!(opts && opts.ignoreCorrelationId))
 			headers[LibraryClientConstants.Headers.CorrelationId] = correlationId ? correlationId : LibraryCommonUtility.generateId();
 		if (token && !(opts && opts.ignoreToken))
 			headers[LibraryClientConstants.Headers.AuthKeys.AUTH] = LibraryClientConstants.Headers.AuthKeys.AUTH_BEARER + separator + token;
-		headers[acceptType] = (opts && opts.acceptType != null ? opts.acceptType : contentTypeJson);
-		headers[contentType] = (opts && opts.contentType != null ? opts.contentType : contentTypeJson);
+		headers[acceptType] = (opts?.acceptType ?? contentTypeJson);
+		headers[contentType] = (opts?.contentType ?? contentTypeJson);
+		// a caller's headers win over the defaults; this built the merged map into opts,
+		// where it was never sent
 		if (opts && opts.headers)
-			//opts = Object.assign(headers, opts.headers);
-			opts = { ...headers, ...opts.headers };
+			Object.assign(headers, opts.headers);
 
 		let options = {
 			baseURL: baseUrl,
@@ -90,7 +90,8 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 
 		if (config.timeout)
 			options.timeout = config.timeout;
-		options = { ...options, ...opts };
+		// headers last: opts.headers alone would replace the token and correlation id
+		options = { ...options, ...opts, headers };
 
 		const instance = axios.create(options);
 
@@ -110,20 +111,29 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		//		: Promise.reject(err))
 
 		// Add a response interceptor
+		// bound: axios calls these without the service as `this`
 		instance.interceptors.response.use(
-			this._interceptorSuccess,
-			this._interceptorFailure
+			this._interceptorSuccess.bind(this),
+			this._interceptorFailure.bind(this)
 		);
 
 		return instance;
 	}
 
-	_interceptorFailure(error) {
+	async _interceptorFailure(error) {
 		// Any status codes that falls outside the range of 2xx cause this function to trigger// Any status codes that falls outside the range of 2xx cause this function to trigger
 		// await retry(3, unreliablePromise(3, log('Error'))).then(log('Resolved'))
 
-		if (error && error.response && error.response.status === 401)
-			return this._refreshToken(correlationId, true).resolve();
+		// validateStatus accepts 200-503, so a 401 normally reaches _validate, not here
+		if (error && error.response && error.response.status === 401) {
+			const correlationId = LibraryCommonUtility.correlationId();
+			try {
+				await this._refreshToken(correlationId, true);
+			}
+			catch (err) {
+				this._logger.exception('AxiosRestCommunicationService', '_interceptorFailure', err, correlationId);
+			}
+		}
 
 		return Promise.reject(error);
 	}
@@ -133,11 +143,12 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 		return response;
 	}
 
-	_requestNewToken() {
-		return this._serviceAuth.tokenUser(null, true);
+	_requestNewToken(correlationId, force) {
+		// was this._serviceAuth.tokenUser, which no auth service defines
+		return this._refreshToken(correlationId, force);
 	}
 
-	_validate(correlationId, response) {
+	async _validate(correlationId, response) {
 		if (response.status === 200) {
 			// TODO: CRC
 			// if (response.data.results && response.data.results.data) {
@@ -148,8 +159,14 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 			return response.data;
 		}
 
-		if (response.status === 401)
-			this._refreshToken(correlationId, true);
+		if (response.status === 401) {
+			try {
+				await this._refreshToken(correlationId, true);
+			}
+			catch (err) {
+				this._logger.exception('AxiosRestCommunicationService', '_validate', err, correlationId);
+			}
+		}
 
 		return this._error('AxiosRestCommunicationService', '_validate', null, null, null, null, correlationId);
 	}
