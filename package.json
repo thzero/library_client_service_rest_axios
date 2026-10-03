@@ -1,10 +1,10 @@
 {
   "name": "@thzero/library_client_service_rest_axios",
   "type": "module",
-  "version": "0.19.2",
+  "version": "0.19.3",
   "version_major": 0,
   "version_minor": 19,
-  "version_patch": 2,
+  "version_patch": 3,
   "version_date": "10/03/2026",
   "author": "thZero",
   "author_url": "https://www.thzero.com",
@@ -32,7 +32,7 @@
     "@thzero/library_common": "^0.19"
   },
   "devDependencies": {
-    "eslint": "^9",
-    "vitest": "^5.0.1"
+    "eslint": "^10",
+    "vitest": "^5.0.3"
   }
 }
