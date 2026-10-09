@@ -14,3 +14,4 @@ version.sh
 test
 vitest.config.js
 eslint.config.mjs
+coverage
