@@ -168,7 +168,11 @@ class AxiosRestCommunicationService extends RestCommunicationService {
 			}
 		}
 
-		return this._error('AxiosRestCommunicationService', '_validate', null, null, null, null, correlationId);
+		// The server's message and code say why it refused. Provide error upstream.
+		const body = response.data;
+		// Only the message: a code would add an entry to the response's errors, which forms
+		// show (handleError), and apps never showed anything there for a refusal.
+		return this._error('AxiosRestCommunicationService', '_validate', body?.message ?? `Request failed (${response.status}).`, null, null, null, correlationId);
 	}
 }
 
